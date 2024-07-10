@@ -1,0 +1,36 @@
+version: 2
+
+sources:
+  # - name: SC1
+  #   schema: SC1
+  #   tables:
+  #     - name: p_actor
+  #     - name: p_film
+  #     - name: p_genre
+      
+  # - name: SC2
+  #   schema: SC2
+  #   tables:
+  #     - name: m_film
+  #     - name: m_film_actor
+
+  # - name: SC3
+  #   schema: SC3
+  #   tables:
+  #     - name: c_films
+  #     - name: c_ratings
+  # - name: SC3
+  #   schema: SC3
+  #   tables:
+  #     - name: c_films
+  #     - name: c_ratings
+
+  - name: SC_App1
+    schema: SC_App1
+    tables:
+      - name: bonanalyse
+      - name: detailfaculteecoleprofesseur
+      - name: faculteecole
+      - name: membreexterne
+      - name: etablissementuniversitaire
+      # - name: 
