@@ -2,7 +2,7 @@
 
 This documentation provides detailed steps for setting up a data warehousing project using Docker, PostgreSQL, Airbyte, and dbt. The project involves installing these components, creating sources and destinations in Airbyte, and setting up dbt to transform and load data into a PostgreSQL database.
 
-![Interface](./workflow.png?raw=true "Title")
+![Interface](./images/workflow.png?raw=true "Title")
 
 ### 1. Installing Docker
 
