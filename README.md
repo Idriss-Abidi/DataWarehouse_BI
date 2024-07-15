@@ -71,55 +71,21 @@ docker run -d --name airbyte -p 8000:8000 airbyte/airbyte:latest
 
 ### 4. Installing dbt
 
+We're gonna use dbt core for the 'Transform' phase. You can install [dbt Core]("https://docs.getdbt.com/docs/core/installation-overview") on the command line by using one of these methods:
+- Use pip to install dbt
+- Use a Docker image to install dbt
+- Install dbt from source
+
+
 **Step 1: Install dbt CLI**
 
-**Windows:**
-```sh
-pip install dbt-core
-```
-
-**macOS and Linux:**
-```sh
-pip install dbt-core
-```
+In this case i installed it using pip with [vierual environement]("https://docs.getdbt.com/docs/core/pip-install#using-virtual-environments") so check the documentation for details!
 
 **Step 2: Verify dbt Installation**
 1. Open a terminal or command prompt.
 2. Run the command: `dbt --version`. You should see the dbt version installed.
 
-### 5. Setting up PostgreSQL as our Warehouse
-
-#### Option 1: Using Docker
-
-**Step 1: Pull the PostgreSQL Docker Image**
-```sh
-docker pull postgres:latest
-```
-
-**Step 2: Run a PostgreSQL Container**
-```sh
-docker run --name warehouse_postgres -e POSTGRES_PASSWORD=warehousepassword -d postgres
-```
-Replace `warehousepassword` with a secure password.
-
-**Step 3: Verify PostgreSQL Container**
-```sh
-docker ps
-```
-
-#### Option 2: Installing Locally
-
-**Step 1: Download PostgreSQL Installer**
-1. Visit the [PostgreSQL download page](https://www.postgresql.org/download/) and choose your operating system.
-
-**Step 2: Run the Installer**
-2. Follow the prompts in the installer to complete the installation, configuring your password and other settings as needed.
-
-**Step 3: Verify PostgreSQL Installation**
-1. Open a terminal or command prompt.
-2. Run the command: `psql --version`. You should see the PostgreSQL version installed.
-
-### 6. Initializing a dbt Project
+### 5. Initializing a dbt Project
 
 **Step 1: Create a New dbt Project**
 ```sh
@@ -136,13 +102,13 @@ my_dbt_project:
     dev:
       type: postgres
       host: localhost
+      port: 5432
       user: your_username
       password: your_password
-      port: 5432
-      dbname: result
-      schema: public
+      dbname: your_database
+      schema: destination_schema #NB: default is public
 ```
-Replace `your_username` and `your_password` with your PostgreSQL credentials.
+Replace `your_username` and `your_password` with your PostgreSQL credentials. Also `your_database` name and `destination_schema`.
 
 ### ELT Process
 
@@ -151,7 +117,7 @@ Replace `your_username` and `your_password` with your PostgreSQL credentials.
 **Step 1: Create Sources in Airbyte**
 
 1. Open the Airbyte UI (`http://localhost:8000`).
-2. Navigate to the `Sources` tab and create sources for MySQL, MariaDB, PostgreSQL, and CSV files. Ensure each database is related to a specific schema, not the `public` schema, in the `result` database.
+2. Navigate to the `Sources` tab and create sources for MySQL, MariaDB, PostgreSQL, and CSV files. Ensure each database is related to a specific schema, not the `destination_schema` schema, in the `your_database` database.
 
 **Step 2: Create Destination in Airbyte**
 
@@ -193,7 +159,7 @@ models:
 **Step 4: Create New Tables in `models/examples`**
 
 1. In the `models/examples` folder, create new SQL files to define the tables based on the schemas needed.
-2. Ensure these tables insert data into the `public` schema in the `result` database.
+2. Ensure these tables insert data into the `destination_schema` schema in your database.
 
 Example SQL file:
 ```sql
