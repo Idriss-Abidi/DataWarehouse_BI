@@ -6,14 +6,14 @@ This documentation provides detailed steps for setting up a data warehousing pro
 
 ### 1. Installing Docker
 
-##Step 1: Download and Install Docker**
+**Step 1: Download and Install Docker**
 1. Visit the [Docker website](https://www.docker.com/products/docker-desktop) and download Docker Desktop for your operating system (Windows, macOS, or Linux).
 2. Follow the installation instructions for your OS:
    - **Windows**: Run the Docker Desktop Installer executable, follow the prompts, and restart your computer.
    - **macOS**: Open the downloaded .dmg file, drag Docker to your Applications folder, and launch Docker.
    - **Linux**: Follow the instructions specific to your distribution, which typically involve using package managers like `apt`, `yum`, or `snap`.
 
-##Step 2: Verify Docker Installation**
+**Step 2: Verify Docker Installation**
 1. Open a terminal or command prompt.
 2. Run the command: `docker --version`. You should see the Docker version installed.
 
@@ -21,12 +21,12 @@ This documentation provides detailed steps for setting up a data warehousing pro
 
 #### Option 1: Using Docker
 
-##Step 1: Pull the PostgreSQL Docker Image**
+**Step 1: Pull the PostgreSQL Docker Image**
 ```sh
 docker pull postgres:latest
 ```
 
-##Step 2: Run a PostgreSQL Container**
+**Step 2: Run a PostgreSQL Container**
 ```sh
 docker run --name my_postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres
 ```
