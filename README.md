@@ -155,6 +155,26 @@ models:
       - name: column_name
         description: "A description of the column"
 ```
+
+**Step 4: Create New Tables in `models/examples`**
+
+1. In the `models/examples` folder, create new SQL files to define the tables based on the schemas needed.
+2. Ensure these tables insert data into the `destination_schema` schema in your database.
+
+Example SQL file:
+```sql
+-- models/examples/my_new_table.sql
+
+with source_data as (
+  select * from {{ ref('source_table') }}
+)
+
+select
+  column1,
+  column2
+from source_data
+```
+
 And here's an example from our database:
 ```yaml
 WITH devis_data AS (
@@ -180,25 +200,6 @@ WITH devis_data AS (
                   d."idParticulier" IS NOT NULL 
           )
           SELECT * FROM devis_data
-```
-
-**Step 4: Create New Tables in `models/examples`**
-
-1. In the `models/examples` folder, create new SQL files to define the tables based on the schemas needed.
-2. Ensure these tables insert data into the `destination_schema` schema in your database.
-
-Example SQL file:
-```sql
--- models/examples/my_new_table.sql
-
-with source_data as (
-  select * from {{ ref('source_table') }}
-)
-
-select
-  column1,
-  column2
-from source_data
 ```
 
 ### Conclusion
