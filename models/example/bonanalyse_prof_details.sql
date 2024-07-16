@@ -9,7 +9,7 @@ WITH bonanalyse_data AS (
                   eu.nom AS etablissement_universitaire_nom,
                   concat(me.prenom, ' ', me.nom) AS professeur,
                   me.cin,
-                  concat(fac.nom, ' - ', eu.nom) AS faculteecole_nom
+                  concat(fac.nom, ' - ', eu.nom) AS faculte_ecole_nom
               FROM 
                   {{ source('SC_App1', 'bonanalyse') }} b
               INNER JOIN 

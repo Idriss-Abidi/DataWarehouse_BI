@@ -11,7 +11,7 @@ WITH devis_data AS (
                   me."prenom", 
                   me."cin", 
                   me."email",
-                  concat(me.nom, ' ', me.prenom, ' / ', me.cin) as nom_complet
+                  concat(me.nom, ' ', me.prenom, ' - ', me.cin) as nom_complet
                   
               FROM 
                   {{ source('SC_App1', 'devis') }} d
