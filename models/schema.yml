@@ -1,0 +1,41 @@
+version: 2
+
+sources:
+  - name: SC_App1
+    schema: SC_App1
+    tables:
+      - name: bonanalyse
+      - name: detailsbonanalyse
+      - name: detailfaculteecoleprofesseur
+      - name: faculteecole
+      - name: membreexterne
+      - name: etablissementuniversitaire
+      - name: statutconfirmationdemandebonanalyse
+      - name: statutconfirmationdossuanalyse
+      - name: statutbonanalyse
+      - name: users
+      - name: devis
+      - name: demandeficheanalyse
+      - name: specialite
+      - name: statutdemandeficheanalyse
+      - name: moyenpaiement
+      - name: diplome
+      - name: detailsdevis
+      - name: dossieranalyse
+      - name: facturation
+      - name: statutdossieranalyse
+      - name: etudiant
+      - name: detailsficheanalyse
+      - name: detailsouschampficheanalysevaleurproposeeficheanalyse
+      - name: souschampficheanalyse
+      - name: typechamp
+      - name: detailchampficheanalysesouschampficheanalyse
+      - name: champficheanalyse
+      - name: detailchampficheanalysevaleurproposeeficheanalyse
+      - name: valeurproposeeficheanalyse
+      - name: ficheanalyse
+      - name: pays
+      - name: civilite
+      - name: laboratoire
+      
+      # - name: 
