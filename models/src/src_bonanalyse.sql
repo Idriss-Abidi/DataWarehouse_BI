@@ -1,0 +1,1 @@
+select * from  {{ source('SC_App1', 'bonanalyse') }} 
