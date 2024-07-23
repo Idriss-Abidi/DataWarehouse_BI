@@ -24,10 +24,10 @@ sources:
       - name: dossieranalyse
       - name: facturation
       - name: statutdossieranalyse
+      - name: statutconfirmationdemandedevis
       - name: etudiant
       - name: detailsficheanalyse
       - name: detailsouschampficheanalysevaleurproposeeficheanalyse
-      - name: souschampficheanalyse
       - name: typechamp
       - name: detailchampficheanalysesouschampficheanalyse
       - name: champficheanalyse
@@ -37,5 +37,6 @@ sources:
       - name: pays
       - name: civilite
       - name: laboratoire
-      
+      - name: typeanalyse
+      - name: souschampficheanalyse
       # - name: 
