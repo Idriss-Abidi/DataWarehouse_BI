@@ -28,6 +28,7 @@ sources:
       - name: etudiant
       - name: detailsficheanalyse
       - name: detailsouschampficheanalysevaleurproposeeficheanalyse
+      # - name: souschampficheanalyse
       - name: typechamp
       - name: detailchampficheanalysesouschampficheanalyse
       - name: champficheanalyse
@@ -39,4 +40,12 @@ sources:
       - name: laboratoire
       - name: typeanalyse
       - name: souschampficheanalyse
-      # - name: 
+      - name: etablissementnonuniversitaire
+      - name: etablissementcaracterecommercial
+      - name: etablissementcaractereadministratif
+      - name: typeetablissement
+      - name: secteur
+      - name: service
+      - name: detailtypeanalyseunitemesure
+      - name: detaillaboratoireunitemesure
+      - name: unitemesure
