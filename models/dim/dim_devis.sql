@@ -13,16 +13,26 @@ WITH dim_devis AS (
         me.cin, 
         me.email,
         
-        dd."idDetailsDevis",
-        dd."idDetailLaboratoireUniteMesure",
-        dd."idDetailTypeAnalyseUniteMesure",
+        dlu."idLaboratoire",
+        dlu.laboratoire,
+        dlu."idUniteMesure" as idUniteMesure_lab,
+        dlu.unitemesure,
+        dtu."idTypeAnalyse",
+        dtu."prestation" AS typeAnalyse,
+        dtu."idUniteMesure" as idUniteMesure_type,
+        dtu."abreviation" AS typeAnalyse_unitemesure,
         dd.valeur
     FROM 
-        {{ source('SC_App1', 'devis') }} d
+        {{ ref('src_devis') }} d
     left JOIN 
-        {{ source('SC_App1', 'membreexterne') }} me ON d."idParticulier" = me."idMembreExterne"
+        {{ ref('src_membreexterne') }} me ON d."idParticulier" = me."idMembreExterne"
     LEFT JOIN 
-        {{ source('SC_App1', 'detailsdevis') }} dd ON dd."idDevis" = d."idDevis"
+        {{ ref('src_detailsdevis') }} dd ON dd."idDevis" = d."idDevis"
+    left join 
+    {{ref('dim_detail_labo_unitemesure')}} dlu on dlu."idDetailLaboratoireUniteMesure" = dd."idDetailLaboratoireUniteMesure"
+    left join 
+    {{ref('dim_detail_typeanalyse_unitemesure')}} dtu on dtu."idDetailTypeAnalyseUniteMesure" = dd."idDetailTypeAnalyseUniteMesure"
+    
     -- WHERE 
     --     d."idParticulier" IS NOT NULL
 )

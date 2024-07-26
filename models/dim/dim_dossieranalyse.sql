@@ -17,10 +17,10 @@ WITH dim_dossieranalyse AS (
         f.numero, 
         f."numeroQuittance"
     FROM 
-        {{ source('SC_App1', 'dossieranalyse') }} df
+        {{ ref('src_dossieranalyse') }} df
     LEFT JOIN 
-        {{ source('SC_App1', 'facturation') }} f ON f."idFacturation" = df."idFacturation"
+        {{ ref('src_facturation') }} f ON f."idFacturation" = df."idFacturation"
     LEFT JOIN 
-        {{ source('SC_App1', 'statutdossieranalyse') }} sda ON sda."idStatutDossierAnalyse" = df."idStatutDossierAnalyse"
+        {{ ref('src_statutdossieranalyse') }} sda ON sda."idStatutDossierAnalyse" = df."idStatutDossierAnalyse"
 )
 SELECT * FROM dim_dossieranalyse

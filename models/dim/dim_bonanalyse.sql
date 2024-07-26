@@ -4,6 +4,7 @@ WITH dim_bonanalyse AS (
         b."dateCreation", 
         b."dateStatut", 
         b."isActuel", 
+        b."active",
         b."montantInitial", 
         b."numeroBA", 
         b."idProfesseur",
@@ -16,28 +17,38 @@ WITH dim_bonanalyse AS (
         sba."abreviation" as statut,
         scdba."abreviation" as statut_confirmation, 
         us."userName" as suiviePar,
-        dba."idDetailsBonAnalyse",
-        dba."idDetailLaboratoireUniteMesure",
-        dba."idDetailTypeAnalyseUniteMesure",
+        -- dba."idDetailsBonAnalyse",
+        dlu."idLaboratoire",
+        dlu.laboratoire,
+        dlu."idUniteMesure" as idUniteMesure_lab,
+        dlu.unitemesure,
+        dtu."idTypeAnalyse",
+        dtu."prestation" AS typeAnalyse,
+        dtu."idUniteMesure" as idUniteMesure_type,
+        dtu."abreviation" AS typeAnalyse_unitemesure,
         dba."valeur"
     FROM 
-        {{ source('SC_App1', 'bonanalyse') }} b
+        {{ ref('src_bonanalyse') }} b
     INNER JOIN 
-        {{ source('SC_App1', 'membreexterne') }} me ON b."idProfesseur" = me."idMembreExterne"
+        {{ ref('src_membreexterne') }} me ON b."idProfesseur" = me."idMembreExterne"
     INNER JOIN 
-        {{ source('SC_App1', 'detailfaculteecoleprofesseur') }} dfac ON me."idMembreExterne" = dfac."idProfesseur"
+        {{ ref('src_detailfaculteecoleprofesseur') }} dfac ON me."idMembreExterne" = dfac."idProfesseur"
     INNER JOIN 
-        {{ source('SC_App1', 'faculteecole') }} fac ON dfac."idFaculteEcole" = fac."idFaculteEcole"
+        {{ ref('src_faculteecole') }} fac ON dfac."idFaculteEcole" = fac."idFaculteEcole"
     INNER JOIN 
-        {{ source('SC_App1', 'etablissementuniversitaire') }} eu ON fac."idEtablissementUniversitaire" = eu."idEtablissementUniversitaire"
+        {{ ref('src_etablissementuniversitaire') }} eu ON fac."idEtablissementUniversitaire" = eu."idEtablissementUniversitaire"
     INNER JOIN 
-        {{ source('SC_App1', 'statutconfirmationdemandebonanalyse') }} scdba ON scdba."idStatutConfirmationDemandeBonAnalyse" = b."idStatutConfirmationDemandeBonAnalyse"
+        {{ ref('src_statutconfirmationdemandebonanalyse') }} scdba ON scdba."idStatutConfirmationDemandeBonAnalyse" = b."idStatutConfirmationDemandeBonAnalyse"
     INNER JOIN 
-        {{ source('SC_App1', 'statutbonanalyse') }} sba ON sba."idStatutBonAnalyse" = b."idStatutBonAnalyse"
+        {{ ref('src_statutbonanalyse') }} sba ON sba."idStatutBonAnalyse" = b."idStatutBonAnalyse"
     LEFT JOIN 
-        {{ source('SC_App1', 'users') }} us ON us."idUser" = b."suivieParUser"
+        {{ ref('src_users') }} us ON us."idUser" = b."suivieParUser"
     LEFT JOIN 
-        {{ source('SC_App1', 'detailsbonanalyse') }} dba ON dba."idBonAnalyse" = b."idBonAnalyse"
+        {{ ref('src_detailsbonanalyse') }} dba ON dba."idBonAnalyse" = b."idBonAnalyse"
+    left join 
+    {{ref('dim_detail_labo_unitemesure')}} dlu on dlu."idDetailLaboratoireUniteMesure" = dba."idDetailLaboratoireUniteMesure"
+    left join 
+    {{ref('dim_detail_typeanalyse_unitemesure')}} dtu on dtu."idDetailTypeAnalyseUniteMesure" = dba."idDetailTypeAnalyseUniteMesure"
     WHERE 
         b."idProfesseur" IS NOT NULL 
         AND dfac."idFaculteEcole" IS NOT NULL

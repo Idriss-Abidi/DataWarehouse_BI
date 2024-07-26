@@ -1,6 +1,6 @@
 WITH dim_etudiant AS (
     SELECT 
-        etd."idEtudiant", 
+        etd."idEtudiant" as etdId, 
         etd.cin, 
         etd.cne, 
         concat(etd.prenom, ' ', etd.nom) AS nom_complet, 
@@ -9,10 +9,10 @@ WITH dim_etudiant AS (
         eu."idEtablissementUniversitaire", 
         eu.nom AS EtablissementUniversitaire
     FROM 
-        {{ source('SC_App1', 'etudiant') }} etd
+        {{ ref('src_etudiant') }} etd
     LEFT JOIN 
-        {{ source('SC_App1', 'diplome') }} dp ON dp."idDiplome" = etd."idDiplome"
+        {{ ref('src_diplome') }} dp ON dp."idDiplome" = etd."idDiplome"
     LEFT JOIN 
-        {{ source('SC_App1', 'etablissementuniversitaire') }} eu ON eu."idEtablissementUniversitaire" = etd."idEtablissementUniversitaire"
+        {{ ref('src_etablissementuniversitaire') }} eu ON eu."idEtablissementUniversitaire" = etd."idEtablissementUniversitaire"
 )
 SELECT * FROM dim_etudiant

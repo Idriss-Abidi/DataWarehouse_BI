@@ -14,24 +14,24 @@ WITH dim_detailsficheanalyse AS (
         vpfa_c.abreviation AS champ_FA_Valeur_Proposee,
         fa."idFicheAnalyse"
     FROM 
-        {{ source('SC_App1', 'detailsficheanalyse') }} dfa
+        {{ ref('src_detailsficheanalyse') }} dfa
     LEFT JOIN 
-        {{ source('SC_App1', 'detailsouschampficheanalysevaleurproposeeficheanalyse') }} dscfavpfa ON dscfavpfa."idDetailSousChampFicheAnalyseValeurProposeeFicheAnalyse" = dfa."idDetailSousChampFicheAnalyseValeurProposeeFicheAnalyse"
+        {{ ref('src_detailsouschampficheanalysevaleurproposeeficheanalyse') }} dscfavpfa ON dscfavpfa."idDetailSousChampFicheAnalyseValeurProposeeFicheAnalyse" = dfa."idDetailSousChampFicheAnalyseValeurProposeeFicheAnalyse"
     LEFT JOIN 
-        {{ source('SC_App1', 'souschampficheanalyse') }} scfa ON scfa."idSousChampFicheAnalyse" = dscfavpfa."idSousChampFicheAnalyse"
+        {{ ref('src_souschampficheanalyse') }} scfa ON scfa."idSousChampFicheAnalyse" = dscfavpfa."idSousChampFicheAnalyse"
     LEFT JOIN 
-        {{ source('SC_App1', 'valeurproposeeficheanalyse') }} vpfa_s ON vpfa_s."idValeurProposeeFicheAnalyse" = dscfavpfa."idValeurProposeeFicheAnalyse"
+        {{ ref('src_valeurproposeeficheanalyse') }} vpfa_s ON vpfa_s."idValeurProposeeFicheAnalyse" = dscfavpfa."idValeurProposeeFicheAnalyse"
     LEFT JOIN 
-        {{ source('SC_App1', 'typechamp') }} tc ON tc."idTypeChamp" = dscfavpfa."idTypeChamp"
+        {{ ref('src_typechamp') }} tc ON tc."idTypeChamp" = dscfavpfa."idTypeChamp"
     LEFT JOIN 
-        {{ source('SC_App1', 'detailchampficheanalysesouschampficheanalyse') }} dcfascfa ON dcfascfa."idSousChampFicheAnalyse" = scfa."idSousChampFicheAnalyse"
+        {{ ref('src_detailchampficheanalysesouschampficheanalyse') }} dcfascfa ON dcfascfa."idSousChampFicheAnalyse" = scfa."idSousChampFicheAnalyse"
     INNER JOIN 
-        {{ source('SC_App1', 'champficheanalyse') }} cfa ON cfa."idChampFicheAnalyse" = dcfascfa."idChampFicheAnalyse"
+        {{ ref('src_champficheanalyse') }} cfa ON cfa."idChampFicheAnalyse" = dcfascfa."idChampFicheAnalyse"
     INNER JOIN 
-        {{ source('SC_App1', 'detailchampficheanalysevaleurproposeeficheanalyse') }} dcfavpfa ON dcfavpfa."idDetailChampFicheAnalyseValeurProposeeFicheAnalyse" = cfa."idChampFicheAnalyse"
+        {{ ref('src_detailchampficheanalysevaleurproposeeficheanalyse') }} dcfavpfa ON dcfavpfa."idDetailChampFicheAnalyseValeurProposeeFicheAnalyse" = cfa."idChampFicheAnalyse"
     LEFT JOIN 
-        {{ source('SC_App1', 'valeurproposeeficheanalyse') }} vpfa_c ON vpfa_c."idValeurProposeeFicheAnalyse" = dcfavpfa."idValeurProposeeFicheAnalyse"
+        {{ ref('src_valeurproposeeficheanalyse') }} vpfa_c ON vpfa_c."idValeurProposeeFicheAnalyse" = dcfavpfa."idValeurProposeeFicheAnalyse"
     LEFT JOIN 
-        {{ source('SC_App1', 'ficheanalyse') }} fa ON fa."idFicheAnalyse" = dcfavpfa."idFicheAnalyse"
+        {{ ref('src_ficheanalyse') }} fa ON fa."idFicheAnalyse" = dcfavpfa."idFicheAnalyse"
 )
 SELECT * FROM dim_detailsficheanalyse

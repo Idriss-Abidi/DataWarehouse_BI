@@ -2,7 +2,7 @@ WITH dim_particulier AS (
     SELECT DISTINCT
         me."idMembreExterne",
         cv.abreviation AS civilite,
-        concat(me.nom, ' ', me.prenom) AS nom_complet,
+        concat(me.nom, ' ', me.prenom) AS Particulier,
         me.cin,
         me.email,
         me.adresse,
@@ -16,15 +16,15 @@ WITH dim_particulier AS (
         me."isActive",
         sp.abreviation AS specialite,
         me."idEtablissementCaractereAdministratif", 
-        me."idEtablissementCaractereCommercial"
+        me."idEtablissementNonUniversitaire"
     FROM 
-        {{ source('SC_App1', 'membreexterne') }} me
+        {{ ref('src_membreexterne') }} me
     LEFT JOIN 
-        {{ source('SC_App1', 'pays') }} p ON p."idPays" = me."idPays"
+        {{ ref('src_pays') }} p ON p."idPays" = me."idPays"
     LEFT JOIN 
-        {{ source('SC_App1', 'civilite') }} cv ON cv."idCivilite" = me."idCivilite"
+        {{ ref('src_civilite') }} cv ON cv."idCivilite" = me."idCivilite"
     LEFT JOIN 
-        {{ source('SC_App1', 'specialite') }} sp ON sp."idSpecialite" = me."idSpecialite"
+        {{ ref('src_specialite') }} sp ON sp."idSpecialite" = me."idSpecialite"
     WHERE 
          "DTYPE" like 'particulier'
 )
