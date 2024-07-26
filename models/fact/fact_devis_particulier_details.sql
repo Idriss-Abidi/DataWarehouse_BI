@@ -10,12 +10,23 @@ WITH devis_data AS (
                   d."idParticulier",
                   me.Particulier,
                   me."cin", 
-                  me."email",
-                  concat ( me.adresse, ' ', me.ville, ', ', me.pays) as adresse                 
+                  me."email"
+
+                  -- d.laboratoire,
+                --   dlu."idUniteMesure",
+                  -- d.unitemesure,
+                --   dtu."idTypeAnalyse",
+                  -- d.typeAnalyse,
+                --   dtu."idUniteMesure",
+                  -- d.typeAnalyse_unitemesure
+                --   dtu."valeur"             
               FROM 
                   {{ ref('dim_devis') }} d
               INNER JOIN 
                   {{ ref('dim_particulier') }} me ON d."idParticulier" = me."idMembreExterne"
-              order by  d."dateCreation"
+              
+            -- where active=TRUE 
+            order by  d."dateCreation"
+
           )
           SELECT * FROM devis_data
