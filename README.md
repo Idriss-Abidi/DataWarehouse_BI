@@ -4,204 +4,100 @@
 This documentation provides detailed steps for setting up a data warehousing project using Docker, PostgreSQL, Airbyte, and dbt. The project involves installing these components, creating sources and destinations in Airbyte, and setting up dbt to transform and load data into a PostgreSQL database.
 
 ![Interface](./images/pipeline.png?raw=true "Title")
+## Table of Contents
 
-### 1. Installing Docker
+1. [Airbyte Installation and Configuration](#airbyte-installation-and-configuration)
+2. [dbt Installation and Project Setup](#dbt-installation-and-project-setup)
+3. [Dagster Integration](#dagster-integration)
+4. [Metabase Installation and Configuration](#metabase-installation-and-configuration)
 
-**Step 1: Download and Install Docker**
-1. Visit the [Docker website](https://www.docker.com/products/docker-desktop) and download Docker Desktop for your operating system (Windows, macOS, or Linux).
-2. Follow the installation instructions for your OS:
-   - **Windows**: Run the Docker Desktop Installer executable, follow the prompts, and restart your computer.
-   - **macOS**: Open the downloaded .dmg file, drag Docker to your Applications folder, and launch Docker.
-   - **Linux**: Follow the instructions specific to your distribution, which typically involve using package managers like `apt`, `yum`, or `snap`.
+## Airbyte Installation and Configuration
 
-**Step 2: Verify Docker Installation**
-1. Open a terminal or command prompt.
-2. Run the command: `docker --version`. You should see the Docker version installed.
+### 1. Install Airbyte using Docker
 
-### 2. Installing PostgreSQL
-
-#### Option 1: Using Docker
-
-**Step 1: Pull the PostgreSQL Docker Image**
-```sh
-docker pull postgres:latest
-```
-
-**Step 2: Run a PostgreSQL Container**
-```sh
-docker run --name my_postgres -e POSTGRES_PASSWORD=mysecretpassword -d postgres
-```
-Replace `mysecretpassword` with a secure password.
-
-**Step 3: Verify PostgreSQL Container**
-```sh
-docker ps
-```
-
-#### Option 2: Installing Locally
-
-**Step 1: Download PostgreSQL Installer**
-1. Visit the [PostgreSQL download page](https://www.postgresql.org/download/) and choose your operating system.
-
-**Step 2: Run the Installer**
-2. Follow the prompts in the installer to complete the installation, configuring your password and other settings as needed.
-
-**Step 3: Verify PostgreSQL Installation**
-1. Open a terminal or command prompt.
-2. Run the command: `psql --version`. You should see the PostgreSQL version installed.
-
-### 3. Installing Airbyte
+1. **Pull Airbyte Docker Image:**
 
 #### Option 1: Using Docker
 
 **Step 1: Download and Run Airbyte Docker**
+ ```sh
+   docker pull airbyte/airbyte
+```
+
+**Step 2: Run Airbyte with Docker:**
 ```sh
 docker run -d --name airbyte -p 8000:8000 airbyte/airbyte:latest
 ```
 
-**Step 2: Access Airbyte UI**
-1. Open a web browser and navigate to `http://localhost:8000`.
+**Step 3: Access Airbyte UI**
+ Open a web browser and navigate to `http://localhost:8000`.
+ 
+#### For Other Installation Options:
+Visit the [Airbyte Documentation](https://docs.airbyte.com/using-airbyte/getting-started/oss-quickstart) and follow the instructions to clone the repository.
 
-#### Option 2: Installing Locally
+### 2. Configure MySQL as Source
 
-**Step 1: Download Airbyte**
-1. Visit the [Airbyte GitHub repository](https://github.com/airbytehq/airbyte) and follow the instructions to clone the repository.
-
-**Step 2: Start Airbyte**
-1. Follow the instructions in the repository to start the Airbyte server and UI.
-
-### 4. Installing dbt
-
-We're gonna use dbt core for the 'Transform' phase. You can install [dbt Core]("https://docs.getdbt.com/docs/core/installation-overview") on the command line by using one of these methods:
-- Use pip to install dbt
-- Use a Docker image to install dbt
-- Install dbt from source
-
-
-**Step 1: Install dbt CLI**
-
-In this case i installed it using pip with [vierual environement]("https://docs.getdbt.com/docs/core/pip-install#using-virtual-environments") so check the documentation for details!
-
-**Step 2: Verify dbt Installation**
-1. Open a terminal or command prompt.
-2. Run the command: `dbt --version`. You should see the dbt version installed.
-
-### 5. Initializing a dbt Project
-
-**Step 1: Create a New dbt Project**
+1. **Create a Dedicated Read-Only MySQL User:**
+Run the following SQL commands in your MySQL database to create a dedicated read-only user:
 ```sh
-dbt init my_dbt_project
+CREATE USER <user_name> IDENTIFIED BY 'your_password_here';
+GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO <user_name>;
 ```
+Replace <user_name> and your_password_here with your desired username and password.
 
-**Step 2: Configure the dbt Profiles File**
-1. Navigate to the `~/.dbt` directory and open the `profiles.yml` file.
-2. Add the following configuration for your PostgreSQL database:
+2. **Create a New MySQL Source in Airbyte:**
+
+Go to the "Sources" tab in Airbyte's UI.
+Search for "MySQL" and create a new MySQL source.
+Fill in the required information:
 ```yaml
-my_dbt_project:
-  target: dev
-  outputs:
-    dev:
-      type: postgres
-      host: localhost
-      port: 5432
-      user: your_username
-      password: your_password
-      dbname: your_database
-      schema: destination_schema #NB: default is public
+Hostname: The hostname of your MySQL server (depends on your installation method).
+Port: 3306
+Database Name: rawDatabase
+Username: The username you created in Step 1.
+Password: The password you created in Step 1.
 ```
-Replace `your_username` and `your_password` with your PostgreSQL credentials. Also `your_database` name and `destination_schema`.
+For more detailed instructions, visit [the Airbyte MySQL Source Documentation](https://docs.airbyte.com/integrations/sources/mysql).
 
-### ELT Process
+3. **Set Up MySQL Replication Modes:**
+When configuring the connection, choose the "Scan Changes with User Defined Cursor" replication mode.
+Select the lastModificationDate column to ensure that each operation will be detected.
 
-#### Airbyte
+### 3. Configure PostgreSQL as Destination
 
-**Step 1: Create Sources in Airbyte**
+1. **Create a Dedicated Read-Only MySQL User:**
+Ensure you have a PostgreSQL server version 9.5 or above running. If needed, create a dedicated user for Airbyte:
+```sh
+CREATE USER airbyte_user WITH PASSWORD '<password>';
+GRANT CREATE, TEMPORARY ON DATABASE <database> TO airbyte_user;
+Replace <password> and <database> with the desired password and database name.
+```
 
-1. Open the Airbyte UI (`http://localhost:8000`).
-2. Navigate to the `Sources` tab and create sources for MySQL, MariaDB, PostgreSQL, and CSV files. Ensure each database is related to a specific schema, not the `destination_schema` schema, in the `your_database` database.
-
-**Step 2: Create Destination in Airbyte**
-
-1. Navigate to the `Destinations` tab and create a destination for your PostgreSQL database using the `result` database and `public` schema.
-
-**Step 3: Connect Sources to Destination and Sync**
-
-1. Navigate to the `Connections` tab and create connections between each source and the destination.
-2. Run the sync process to transfer data from the sources to the destination.
-
-#### dbt
-
-**Step 1: Initialize dbt Project**
-
-1. Open a terminal or command prompt.
-2. Navigate to your dbt project directory.
-3. Run the command: `dbt init`.
-
-**Step 2: Configure `profiles.yml` File**
-
-1. Open the `profiles.yml` file located in the `~/.dbt` directory.
-2. Ensure it has the necessary configuration for your PostgreSQL database as shown in the initialization step.
-
-**Step 3: Define Schemas in `schema.yml`**
-
-1. In your dbt project directory, navigate to the `models` folder.
-2. Create a `schema.yml` file and define the schemas for your project:
+2. **Create a New PostgreSQL Destination in Airbyte:**
+Go to the "Destinations" tab in Airbyte's UI.
+Search for "PostgreSQL" and create a new PostgreSQL destination.
+Fill in the required information:
 ```yaml
-version: 2
-
-models:
-  - name: my_model
-    description: "A description of my model"
-    columns:
-      - name: column_name
-        description: "A description of the column"
+Host: The hostname of your PostgreSQL server.
+Port: 5432
+Username: airbyte_user (or the user you created).
+Password: The password you created.
+Database Name: ourDatabase
+Default Schema Name: public (or your desired schema).
 ```
+For more detailed instructions, visit [the Airbyte PostgreSQL Destination Documentation]("https://docs.airbyte.com/integrations/destinations/postgres") .
 
-**Step 4: Create New Tables in `models/examples`**
+### 4. Automate and Schedule Airbyte Connection
 
-1. In the `models/examples` folder, create new SQL files to define the tables based on the schemas needed.
-2. Ensure these tables insert data into the `destination_schema` schema in your database.
+1. **Set Up Scheduling:**
+Go to the "Connections" tab.
+Select your connection and click on "Edit."
+Set the sync frequency according to your needs.
 
-Example SQL file:
-```sql
--- models/examples/my_new_table.sql
+2. **Use Last Modification Date Field as Trigger:**
+In the sync settings, enable incremental sync and configure the "Last Modification Date" field as the trigger for updates.
 
-with source_data as (
-  select * from {{ ref('source_table') }}
-)
 
-select
-  column1,
-  column2
-from source_data
-```
-
-And here's an example from our database:
-```yaml
-WITH devis_data AS (
-              SELECT DISTINCT
-                  d."idDevis",
-                  d."dateCreation", 
-                  d."montantInitial", 
-                  d."numeroDevis", 
-                  d."idParticulier",
-                  d."consomme",
-                  d."active",
-                  me."nom", 
-                  me."prenom", 
-                  me."cin", 
-                  me."email",
-                  concat(me.nom, ' ', me.prenom, ' / ', me.cin) as nom_complet
-                  
-              FROM 
-                  {{ source('SC_App1', 'devis') }} d
-              INNER JOIN 
-                  {{ source('SC_App1', 'membreexterne') }} me ON d."idParticulier" = me."idMembreExterne"
-              WHERE 
-                  d."idParticulier" IS NOT NULL 
-          )
-          SELECT * FROM devis_data
-```
 
 ### Conclusion
 
