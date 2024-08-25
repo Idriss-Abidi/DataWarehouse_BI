@@ -3,7 +3,7 @@
 ### Design and Implementation of an ELT Pipeline Based on DBT and Airbyte Technologies and Implementation of the BI Component via Metabase
 This documentation provides detailed steps for setting up a data warehousing project using Docker, PostgreSQL, Airbyte, and dbt. The project involves installing these components, creating sources and destinations in Airbyte, and setting up dbt to transform and load data into a PostgreSQL database.
 
-![Interface](./images/pipeline.png?raw=true "Title")
+![Interface](./images/gda_pipeline.png?raw=true "Title")
 ## Table of Contents
 
 1. [Airbyte Installation and Configuration](#airbyte-installation-and-configuration)
