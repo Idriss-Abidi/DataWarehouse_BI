@@ -99,6 +99,120 @@ In the sync settings, enable incremental sync and configure the "Last Modificati
 
 
 
+
+## dbt Installation and Project Setup
+
+### 1. Install dbt
+1. **Install dbt Core:**
+   ```sh
+   pip install dbt-core
+   pip install dbt-postgres
+   ```
+### 2. Create a dbt Project
+1. **Initialize the Project:**
+```sh
+dbt init my_project
+```
+2. **Configure dbt Profiles:**
+Navigate to the profiles.yml file, typically located in the ~/.dbt/ directory.
+
+Configure the PostgreSQL connection:
+```yaml
+our_database:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      user: <your_postgres_username>
+      password: <your_postgres_password>
+      port: 5432
+      dbname: ourDatabase
+      schema: public
+```
+
+### 3. Create dbt Models
+1. **Copy Model Files:**
+
+Place your SQL model files in the models/ directory within your dbt project.
+
+source: This folder will contain models that directly mirror tables from the rawDatabase.
+dimension: This folder will contain models that create dimension tables, usually derived from the source models.
+fact: This folder will contain models that create fact tables, used in analytical queries.
+
+Copy all the contents of the models folder in this repository to the appropriate folders (source, dimension, fact) in your dbt project. Ensure that the models are organized correctly:
+
+Source models go into the models/src folder.
+Dimension models go into the models/dim folder.
+Fact models go into the models/fact folder.
+
+2. **Modify schema.yml:**
+
+Update the schema.yml file in your dbt project to include all tables from the rawDatabase. The schema.yml should reflect the structure and columns of the tables in your source folder.
+
+3. **Modify profiles.yml:**
+
+Update the profiles.yml file in your /.dbt folder to include your postgres database as destination.
+
+```yaml
+dbt_proj:
+  outputs:
+   dev:
+     type: "postgres"
+     host: "localhost"
+     user:  your_user
+     password: your_password
+     port: 5432
+     dbname: "ourDatabase" #your database name
+     schema: "public" #or other schema
+     threads: 4
+  target: "dev"
+```
+
+
+## Dagster Integration
+1. **Initialize a Dagster Project:**
+Using [dbt (dagster-dbt)](https://docs.dagster.io/_apidocs/libraries/dagster-dbt#dagster-dbt-project-scaffold)
+```sh
+pip install dagster dagster-dbt dagster-webserver 
+dagster-dbt project scaffold --project-name my_dagster_project --dbt-project-dir <Path to dbt project>
+```
+This will create a new Dagster project directory my_dagster_project.
+
+2. **Running Dagster locally:**
+Change the port to 5000 to avoid metabase port (3000)
+```sh
+cd my_dagster_project
+dagster dev -p 5000
+```
+
+## Metabase Installation and Configuration
+
+1. **Install Metabase using Docker**
+
+```sh
+docker pull metabase/metabase
+docker run -d -p 3000:3000 --name metabase metabase/metabase
+```
+
+This will start Metabase and make it accessible on http://localhost:3000.
+
+2. **Add PostgreSQL Database to Metabase**
+
+Go to "Admin" settings.
+Click on "Databases" and then "Add Database."
+Choose "PostgreSQL" and configure it with the following details:
+Database Name: ourDatabase
+Host: localhost
+Port: 5432
+Username: <your_postgres_username>
+Password: <your_postgres_password>
+
+3. **Create Dashboards:**
+
+Use Metabase's interface to create and manage dashboards based on your ourDatabase schema.
+
+
 ### Conclusion
 
 This documentation provides a step-by-step guide for setting up a data warehousing project using Docker, PostgreSQL, Airbyte, and dbt. Follow the instructions to install and configure each component, create sources and destinations in Airbyte, and set up dbt to transform and load data into your PostgreSQL database.
