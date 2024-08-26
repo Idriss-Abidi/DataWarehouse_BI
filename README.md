@@ -18,6 +18,7 @@ This documentation provides detailed steps for setting up a data warehousing pro
 1. **Pull Airbyte Docker Image:**
 
 **Step 1: Download Airbyte Docker**
+[Setup & launch Airbyte](https://docs.airbyte.com/deploying-airbyte/docker-compose)
 
 **Step 2: Run Airbyte with Docker:**
 ```sh
@@ -48,7 +49,7 @@ Fill in the required information:
 ```yaml
 Hostname: The hostname of your MySQL server (depends on your installation method).
 Port: 3306
-Database Name: rawDatabase
+Database Name: rawDatabase #Your_database_name
 Username: The username you created in Step 1.
 Password: The password you created in Step 1.
 ```
@@ -77,7 +78,7 @@ Host: The hostname of your PostgreSQL server.
 Port: 5432
 Username: airbyte_user (or the user you created).
 Password: The password you created.
-Database Name: ourDatabase
+Database Name: ourDatabase #Your_database_name
 Default Schema Name: public (or your desired schema).
 ```
 For more detailed instructions, visit [the Airbyte PostgreSQL Destination Documentation]("https://docs.airbyte.com/integrations/destinations/postgres") .
@@ -184,12 +185,16 @@ dagster dev -p 5000
 ## Metabase Installation and Configuration
 
 1. **Install Metabase using Docker**
-
+Run it using [metabase.db folder](https://github.com/Idriss-Abidi/DataWarehouse_BI/tree/main/dashboard) from this project to get the same dashboard directly.
 ```sh
 docker pull metabase/metabase
-docker run -d -p 3000:3000 --name metabase metabase/metabase
+docker run -d --name metabase_test3 -p 3000:3000 <Path to DashBoard folder>:/metabase.
 ```
-
+example : 
+```sh
+docker pull metabase/metabase
+docker run -d --name metabase_test3 -p 3000:3000 -v /mnt/c/Users/ADMIN/Desktop/dashboard:/metabase.
+```
 This will start Metabase and make it accessible on http://localhost:3000.
 
 2. **Add PostgreSQL Database to Metabase**
