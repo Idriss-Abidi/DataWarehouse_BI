@@ -17,12 +17,7 @@ This documentation provides detailed steps for setting up a data warehousing pro
 
 1. **Pull Airbyte Docker Image:**
 
-#### Option 1: Using Docker
-
 **Step 1: Download and Run Airbyte Docker**
- ```sh
-   docker pull airbyte/airbyte
-```
 
 **Step 2: Run Airbyte with Docker:**
 ```sh
