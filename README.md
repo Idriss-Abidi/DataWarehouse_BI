@@ -196,6 +196,7 @@ docker pull metabase/metabase
 docker run -d --name metabase_test3 -p 3000:3000 -v /mnt/c/Users/ADMIN/Desktop/dashboard:/metabase.
 ```
 This will start Metabase and make it accessible on http://localhost:3000.
+
 username/email : iiddrriiss20@gmail.com
 pwd: driss20
 
