@@ -96,59 +96,78 @@ In the sync settings, enable incremental sync and configure the "Last Modificati
 
 
 
-## dbt Installation and Project Setup
+## DBT Installation and Project Setup
 
-### 1. Install dbt
-1. **Install dbt Core:**
-   ```sh
-   pip install dbt-core
-   pip install dbt-postgres
-   ```
-### 2. Create a dbt Project
-1. **Initialize the Project:**
+### 1. DBT Project Setup
+
+1.**Create a New Folder and Clone the Repository**
+
 ```sh
-dbt init my_project
-```
-2. **Configure dbt Profiles:**
-Navigate to the profiles.yml file, typically located in the ~/.dbt/ directory.
-
-Configure the PostgreSQL connection:
-```yaml
-our_database:
-  target: dev
-  outputs:
-    dev:
-      type: postgres
-      host: localhost
-      user: <your_postgres_username>
-      password: <your_postgres_password>
-      port: 5432
-      dbname: ourDatabase
-      schema: public
+mkdir new_project
+cd new_project
+git clone https://github.com/Idriss-Abidi/DataWarehouse_BI
 ```
 
-### 3. Create dbt Models
-1. **Copy Model Files:**
+2.**Create a New Folder and Clone the Repository**
+```sh
+python -m venv dbt_venv
+```
 
-Place your SQL model files in the models/ directory within your dbt project.
+Activate the Environment
 
-source: This folder will contain models that directly mirror tables from the rawDatabase.
-dimension: This folder will contain models that create dimension tables, usually derived from the source models.
-fact: This folder will contain models that create fact tables, used in analytical queries.
+```sh
+{Path to new_project}\dbt_venv\Scripts\Activate.ps1
+```
 
-Copy all the contents of the models folder in this repository to the appropriate folders (source, dimension, fact) in your dbt project. Ensure that the models are organized correctly:
+3.**Install dbt-core and dbt-postgres**
+Make sure you're still in the new_project folder:
+```sh
+pip install dbt-core dbt-postgres
+```
 
-Source models go into the models/src folder.
-Dimension models go into the models/dim folder.
-Fact models go into the models/fact folder.
+Your folder structure should look like this:
+```yml
+new_project
+├── DataWarehouse_BI
+└── dbt_venv
+```
 
-2. **Modify schema.yml:**
+### DBT Configuration
+1.**Create the .dbt Folder in the Admin Path**
+```sh
+mkdir {Path to ADMIN directory}\ADMIN\.dbt
+```
 
-Update the schema.yml file in your dbt project to include all tables from the rawDatabase. The schema.yml should reflect the structure and columns of the tables in your source folder.
+2.**Set Up Your Connection Profile**
+Go back to the new_project folder and run:
+```sh
+dbt init
+```
 
-3. **Modify profiles.yml:**
+Follow the prompts to configure the profiles.yml file:
 
-Update the profiles.yml file in your /.dbt folder to include your postgres database as destination.
+```yml
+Enter a name for your project (letters, digits, underscore):
+>> choose a name
+Which database would you like to use?
+[1] postgres
+Enter a number: 
+>> 1
+host (hostname for the instance): 
+>> localhost
+port [5432]: 
+>> 5432
+user (dev username): 
+>> postgres
+pass (dev password):
+>> your password
+dbname (default database that dbt will build objects in): 
+>> Your database name
+schema (default schema that dbt will build objects in): public
+threads (1 or more) [1]: 1
+```
+
+After running the setup, go to the ADMIN/.dbt folder and ensure the profiles.yml file is present and correctly configured.
 
 ```yaml
 dbt_proj:
@@ -161,9 +180,26 @@ dbt_proj:
      port: 5432
      dbname: "ourDatabase" #your database name
      schema: "public" #or other schema
-     threads: 4
+     threads: 1
   target: "dev"
 ```
+
+
+### 3. Debug and Run Your DBT Project
+1.**Move to the DataWarehouse_BI Folder Inside Your new_project Folder**
+```sh
+cd DataWarehouse_BI
+```
+2.**Test the Database Connection**
+```sh
+dbt debug
+```
+3.**Compile SQL Model Files Against the Current Target Database**
+```sh
+dbt run
+```
+
+If everything went well, you should be able to see the results of the SQL models in your target schema in the PostgreSQL database.
 
 
 ## Dagster Integration
