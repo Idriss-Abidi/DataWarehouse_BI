@@ -132,7 +132,7 @@ new_project
 └── dbt_venv
 ```
 
-### DBT Configuration
+### 2. DBT Configuration
 1.**Create the .dbt Folder in the Admin Path**
 ```sh
 mkdir {Path to ADMIN directory}\ADMIN\.dbt
