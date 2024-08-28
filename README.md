@@ -163,8 +163,10 @@ pass (dev password):
 >> your password
 dbname (default database that dbt will build objects in): 
 >> Your database name
-schema (default schema that dbt will build objects in): public
-threads (1 or more) [1]: 1
+schema (default schema that dbt will build objects in): 
+>> public or other schema
+threads (1 or more) [1]:
+>> 1
 ```
 
 After running the setup, go to the ADMIN/.dbt folder and ensure the profiles.yml file is present and correctly configured.
