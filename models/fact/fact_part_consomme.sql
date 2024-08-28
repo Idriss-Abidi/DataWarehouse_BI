@@ -11,7 +11,8 @@ WITH consumption_counts AS (
     INNER JOIN 
         {{ ref('src_devis') }} ba ON ba."idDevis" = fa."idDevis"
     WHERE 
-        fa."idDevis" IS NOT NULL
+        fa."idDevis" IS NOT NULL and ba."active" is TRUE
+
     GROUP BY 
         ba."idParticulier",
         fa."idDevis"

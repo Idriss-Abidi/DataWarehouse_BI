@@ -11,7 +11,7 @@ WITH consumption_counts AS (
     INNER JOIN 
         {{ ref('src_bonanalyse') }} ba ON ba."idBonAnalyse" = fa."idBonAnalyse"
     WHERE 
-        fa."idBonAnalyse" IS NOT NULL
+        fa."idBonAnalyse" IS NOT NULL and ba."active" is TRUE
     GROUP BY 
         ba."idProfesseur",
         fa."idBonAnalyse"

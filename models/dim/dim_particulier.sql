@@ -2,7 +2,7 @@ WITH dim_particulier AS (
     SELECT DISTINCT
         me."idMembreExterne",
         cv.abreviation AS civilite,
-        concat(me.nom, ' ', me.prenom) AS Particulier,
+        concat(me.prenom, ' ', me.nom) AS Particulier,
         me.cin,
         me.email,
         me.adresse,

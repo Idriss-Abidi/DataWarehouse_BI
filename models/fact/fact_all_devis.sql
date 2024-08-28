@@ -22,10 +22,10 @@ WITH devis_data AS (
 
               FROM 
                   {{ ref('dim_devis') }} d
-              INNER JOIN 
+              left JOIN 
                   {{ ref('dim_particulier') }} me ON d."idParticulier" = me."idMembreExterne"
               
-            where active=TRUE 
+            -- where active=TRUE 
             order by  d."dateCreation"
 
           )

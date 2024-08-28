@@ -2,7 +2,7 @@ WITH dim_professeur AS (
     SELECT  
         me."idMembreExterne" AS id,
         cv.abreviation as civilite,
-        concat(me.nom, ' ', me.prenom) AS "Professeur",
+        concat(me.prenom, ' ', me.nom) AS "Professeur",
         me.cin,
         me.email, 
         me.telephone, 

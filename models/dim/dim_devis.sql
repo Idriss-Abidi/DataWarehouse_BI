@@ -9,7 +9,7 @@ WITH dim_devis AS (
         d."idDemandeurEtablissementCaractereAdministratif", d."idDemandeurEtablissementCaractereCommercial",
 
         d."idParticulier",
-        concat(me.nom, ' ', me.prenom) as nom_complet, 
+        concat(me.prenom, ' ', me.nom) as nom_complet, 
         me.cin, 
         me.email,
         

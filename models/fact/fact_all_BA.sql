@@ -16,13 +16,16 @@ WITH bonanalyse_data AS (
                   b.statut_confirmation,
                   
                   b.laboratoire,
+                --   dlu."idUniteMesure",
                   b.unitemesure,
+                --   dtu."idTypeAnalyse",
                   b.typeAnalyse,
+                --   dtu."idUniteMesure",
                   b.typeAnalyse_unitemesure
                 --   dtu."valeur"
               FROM 
                   {{ ref('dim_bonanalyse') }} b
-              INNER JOIN 
+              left JOIN 
                   {{ ref('dim_professeur') }} me ON b."idProfesseur" = me."id"
                 order by  b."dateCreation" 
               
