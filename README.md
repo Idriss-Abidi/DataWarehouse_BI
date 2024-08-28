@@ -188,12 +188,12 @@ dagster dev -p 5000
 Run it using [metabase.db folder](https://github.com/Idriss-Abidi/DataWarehouse_BI/tree/main/dashboard) from this project to get the same dashboard directly.
 ```sh
 docker pull metabase/metabase
-docker run -d --name metabase_test3 -p 3000:3000 <Path to DashBoard folder>:/metabase.
+docker run -d --name metabase_test3 -p 3000:3000 <Path to DashBoard folder>:/metabase.db metabase/metabase
 ```
 example : 
 ```sh
 docker pull metabase/metabase
-docker run -d --name metabase_test3 -p 3000:3000 -v /mnt/c/Users/ADMIN/Desktop/dashboard:/metabase.
+docker run -d --name metabase_test3 -p 3000:3000 -v /mnt/c/Users/ADMIN/Desktop/dashboard:/metabase.db metabase/metabase
 ```
 This will start Metabase and make it accessible on http://localhost:3000.
 
