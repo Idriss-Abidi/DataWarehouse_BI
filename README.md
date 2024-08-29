@@ -219,7 +219,7 @@ Note: This command starts a PostgreSQL container named postgres, sets the passwo
 
 Access the PostgreSQL shell as the postgres user to create a new database:
 ```bash
-
+docker exec -it postgres psql -U postgres
 CREATE DATABASE res;
 ```
 
