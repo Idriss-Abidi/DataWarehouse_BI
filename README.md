@@ -150,6 +150,13 @@ dbt init
 ```
 
 **Or just keep the profiles.yml file in the DBT project rep**
+```yml
+new_project
+├── DataWarehouse_BI
+|   └── profiles.yml
+├── dbt_venv
+└── dashboard 
+```
 
 Follow the prompts to configure the profiles.yml file:
 
