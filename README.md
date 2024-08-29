@@ -125,20 +125,26 @@ Make sure you're still in the new_project folder:
 pip install dbt-core dbt-postgres
 ```
 
+Move the [dashboard folder](https://github.com/Idriss-Abidi/DataWarehouse_BI/tree/main/dashboard) to the parent rep (in this case 'new_project'). 
 Your folder structure should look like this:
+
 ```yml
 new_project
 ├── DataWarehouse_BI
-└── dbt_venv
+├── dbt_venv
+└── dashboard 
 ```
 
 ### 2. DBT Configuration
+
 1.**Create the .dbt Folder in the Admin Path**
+
 ```sh
 mkdir {Path to ADMIN directory}\ADMIN\.dbt
 ```
 Or just keep the profils.yml file in the DBT project rep.
 2.**Set Up Your Connection Profile**
+
 Go back to the new_project folder and run:
 ```sh
 dbt init
@@ -226,15 +232,21 @@ docker exec -it postgres psql -U postgres -d res -f /tmp/res.sql
 After setting up PostgreSQL, update your profiles.yml in dbt to match your PostgreSQL configuration.
 
 ### 3. Debug and Run Your DBT Project
+
 1.**Move to the DataWarehouse_BI Folder Inside Your new_project Folder**
+
 ```sh
 cd DataWarehouse_BI
 ```
+
 2.**Test the Database Connection**
+
 ```sh
 dbt debug
 ```
+
 3.**Compile SQL Model Files Against the Current Target Database**
+
 ```sh
 dbt run
 ```
@@ -245,19 +257,23 @@ If everything went well, you should be able to see the results of the SQL models
 ## Metabase Installation and Configuration
 
 1. **Install Metabase using Docker**
+
 Run it using [metabase.db folder](https://github.com/Idriss-Abidi/DataWarehouse_BI/tree/main/dashboard) from this project to get the same dashboard directly.
+
 ```sh
 docker pull metabase/metabase
 docker run -d --name metabase_test3 -p 3000:3000 <Path to DashBoard folder>:/metabase.db metabase/metabase
 ```
 
 example : 
+
 ```sh
 docker pull metabase/metabase
 docker run -d --name metabase_test3 -p 3000:3000 -v /mnt/c/Users/ADMIN/Desktop/dashboard:/metabase.db metabase/metabase
 ```
 
 Note: If the installation doesn't work, try the following:
+
 ```sh
 git config --global http.postBuffer 157286400
 docker pull metabase/metabase
@@ -291,7 +307,9 @@ Use Metabase's interface to create and manage dashboards.
 
 
 ## Dagster Integration
+
 1. **Initialize a Dagster Project:**
+
 Using [dbt (dagster-dbt)](https://docs.dagster.io/_apidocs/libraries/dagster-dbt#dagster-dbt-project-scaffold)
 ```sh
 pip install dagster dagster-dbt dagster-webserver 
@@ -300,6 +318,7 @@ dagster-dbt project scaffold --project-name my_dagster_project --dbt-project-dir
 This will create a new Dagster project directory my_dagster_project.
 
 2. **Running Dagster locally:**
+   
 Change the port to 5000 to avoid metabase port (3000)
 ```sh
 cd my_dagster_project
