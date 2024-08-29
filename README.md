@@ -277,7 +277,7 @@ example :
 
 ```sh
 docker pull metabase/metabase
-docker run -d --name metabase_test3 -p 3000:3000 -v /mnt/c/Users/ADMIN/Desktop/dashboard:/metabase.db metabase/metabase
+docker run -d --name metabase_test3 -p 3000:3000 c/DataWarehouse_BI/dashboard:/metabase.db metabase/metabase
 ```
 
 Note: If the installation doesn't work, try the following:
