@@ -142,13 +142,14 @@ new_project
 ```sh
 mkdir {Path to ADMIN directory}\ADMIN\.dbt
 ```
-Or just keep the profils.yml file in the DBT project rep.
-2.**Set Up Your Connection Profile**
+Set Up Your Connection Profile
 
 Go back to the new_project folder and run:
 ```sh
 dbt init
 ```
+
+**Or just keep the profiles.yml file in the DBT project rep**
 
 Follow the prompts to configure the profiles.yml file:
 
