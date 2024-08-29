@@ -137,7 +137,7 @@ new_project
 ```sh
 mkdir {Path to ADMIN directory}\ADMIN\.dbt
 ```
-
+Or just keep the profils.yml file in the DBT project rep.
 2.**Set Up Your Connection Profile**
 Go back to the new_project folder and run:
 ```sh
@@ -186,6 +186,44 @@ dbt_proj:
   target: "dev"
 ```
 
+## PostgreSQL with Docker
+
+### Pull the PostgreSQL Docker Image
+
+```bash
+docker pull postgres
+```
+Start a new PostgreSQL container with the following command:
+
+```bash
+docker run --name postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5433:5432 -d postgres
+```
+
+Note: This command starts a PostgreSQL container named postgres, sets the password for the postgres user to mysecretpassword, and maps port 5433 on your host machine to port 5432 in the container.
+
+### Access the PostgreSQL Shell
+
+Access the PostgreSQL shell as the postgres user to create a new database:
+```bash
+
+CREATE DATABASE res;
+```
+
+### Export the Schema Containing the GDA Raw Data Using res.sql File
+
+To export the schema, copy the res.sql file to the PostgreSQL container and execute it:
+
+```bash
+# Copy the SQL file into the container
+docker cp {Path to the sql file}/res.sql postgres:/tmp/res.sql
+
+# Execute the SQL file inside the container
+docker exec -it postgres psql -U postgres -d res -f /tmp/res.sql
+```
+
+### Update profiles.yml for dbt Configuration
+
+After setting up PostgreSQL, update your profiles.yml in dbt to match your PostgreSQL configuration.
 
 ### 3. Debug and Run Your DBT Project
 1.**Move to the DataWarehouse_BI Folder Inside Your new_project Folder**
@@ -204,6 +242,54 @@ dbt run
 If everything went well, you should be able to see the results of the SQL models in your target schema in the PostgreSQL database.
 
 
+## Metabase Installation and Configuration
+
+1. **Install Metabase using Docker**
+Run it using [metabase.db folder](https://github.com/Idriss-Abidi/DataWarehouse_BI/tree/main/dashboard) from this project to get the same dashboard directly.
+```sh
+docker pull metabase/metabase
+docker run -d --name metabase_test3 -p 3000:3000 <Path to DashBoard folder>:/metabase.db metabase/metabase
+```
+
+example : 
+```sh
+docker pull metabase/metabase
+docker run -d --name metabase_test3 -p 3000:3000 -v /mnt/c/Users/ADMIN/Desktop/dashboard:/metabase.db metabase/metabase
+```
+
+Note: If the installation doesn't work, try the following:
+```sh
+git config --global http.postBuffer 157286400
+docker pull metabase/metabase
+docker run -d --name metabase_test3 -p 3000:3000 <Path to DashBoard folder>:/metabase.db metabase/metabase
+```
+
+This will start Metabase and make it accessible on http://localhost:3000.
+
+username/email : idrissabidi2020@gmail.com
+
+pwd: test17
+
+2. **Configure Metabase**
+
+In the Metabase setup process:
+
+Note: The host and port values should match those of your PostgreSQL setup, whether you’re using PostgreSQL locally or through Docker.
+
+Go to "Admin" settings.
+Click on "Databases" and then "Add Database."
+Choose "PostgreSQL" and configure it with the following details:
+Database Name: <database_name>
+Host: host.docker.internal
+Port: 5432
+Username:Set the username to postgres (or your custom username).
+Password: Set the password to the one you configured for PostgreSQL (mysecretpassword in this case).
+
+3. **Create Dashboards:**
+
+Use Metabase's interface to create and manage dashboards.
+
+
 ## Dagster Integration
 1. **Initialize a Dagster Project:**
 Using [dbt (dagster-dbt)](https://docs.dagster.io/_apidocs/libraries/dagster-dbt#dagster-dbt-project-scaffold)
@@ -219,41 +305,6 @@ Change the port to 5000 to avoid metabase port (3000)
 cd my_dagster_project
 dagster dev -p 5000
 ```
-
-## Metabase Installation and Configuration
-
-1. **Install Metabase using Docker**
-Run it using [metabase.db folder](https://github.com/Idriss-Abidi/DataWarehouse_BI/tree/main/dashboard) from this project to get the same dashboard directly.
-```sh
-docker pull metabase/metabase
-docker run -d --name metabase_test3 -p 3000:3000 <Path to DashBoard folder>:/metabase.db metabase/metabase
-```
-example : 
-```sh
-docker pull metabase/metabase
-docker run -d --name metabase_test3 -p 3000:3000 -v /mnt/c/Users/ADMIN/Desktop/dashboard:/metabase.db metabase/metabase
-```
-This will start Metabase and make it accessible on http://localhost:3000.
-
-username/email : idrissabidi2020@gmail.com
-
-pwd: test17
-
-2. **Add PostgreSQL Database to Metabase**
-
-Go to "Admin" settings.
-Click on "Databases" and then "Add Database."
-Choose "PostgreSQL" and configure it with the following details:
-Database Name: ourDatabase
-Host: localhost
-Port: 5432
-Username: <your_postgres_username>
-Password: <your_postgres_password>
-
-3. **Create Dashboards:**
-
-Use Metabase's interface to create and manage dashboards based on your ourDatabase schema.
-
 
 ### Conclusion
 
