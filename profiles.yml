@@ -4,9 +4,9 @@ dbt_proj:
      type: "postgres"
      host: "localhost"
      user: "postgres" #your_username
-     password: "a" #your_password
+     password: "mysecretpassword" #your_password
      port: 5432
      dbname: "res" #your_database
      schema: "public" #your_schema
-     threads: 4
+     threads: 1
   target: "dev"
