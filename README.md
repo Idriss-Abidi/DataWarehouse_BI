@@ -108,7 +108,7 @@ cd new_project
 git clone https://github.com/Idriss-Abidi/DataWarehouse_BI
 ```
 
-2.**Create a New Folder and Clone the Repository**
+2.**Set Up a Virtual Environment**
 ```sh
 python -m venv dbt_venv
 ```
